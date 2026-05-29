@@ -7,8 +7,10 @@ Code repository: https://github.com/TalPodgor/DL_Project3
 The repo intentionally excludes the contents below per the course rule that all
 datasets (used or generated) must live on a shared drive.
 
-Download this entire folder, then place each subfolder directly inside the
-cloned repo root so paths match what the scripts expect.
+Each top-level folder below is uploaded here as a single .zip archive (faster
+download than thousands of small files via Drive). After downloading, unzip
+each archive directly into the cloned repo root so paths match what the
+scripts expect — e.g., dataset.zip -> ./dataset/ , real.zip -> ./real/ , etc.
 
 ================================================================================
 FOLDER CONTENTS
