@@ -1,0 +1,26 @@
+# Datasets (course rule: shared drive)
+dataset/
+real/
+synthetic/
+game*_per_frame/
+synthetic_game*/
+test_output/
+test_output.zip
+training_progress/
+
+# Local CUT repo (cloned at setup, see README)
+contrastive-unpaired-translation/
+
+# Inference outputs
+results/
+
+# OS / tooling
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.env
+nul
+.claude/

@@ -1,0 +1,324 @@
+================================================================================
+PROJECT CONTEXT DOCUMENT - FOR FUTURE CLAUDE SESSIONS
+================================================================================
+Last updated: March 13, 2026
+User: podgort (BGU username)
+
+================================================================================
+PROJECT OVERVIEW
+================================================================================
+
+Project: BGU Deep Learning Final Project - Project 3
+Title: Synthetic-to-Real Image Translation for Chessboard Rendering
+Goal: Train a CUT (Contrastive Unpaired Translation) model to transform
+      synthetic Blender-rendered chess images into realistic-looking images.
+
+The user has:
+- Real chess images extracted from video recordings of 5 games (games 2, 4, 5, 6, 7)
+- Synthetic chess images generated using Blender from FEN positions
+
+================================================================================
+DATASET STRUCTURE
+================================================================================
+
+Location on user's PC: C:\Users\talpo\Desktop\DL_Project_09032026\
+
+Dataset organization (CUT format):
+    dataset/
+    ├── trainA/    (2,664 synthetic images - games 4,5,6,7, white+black viewpoints)
+    ├── trainB/    (736 real images - games 4,5,6,7, white+black viewpoints)
+    ├── testA/     (462 synthetic images - game 2)
+    └── testB/     (140 real images - game 2)
+
+Data augmentation applied:
+- All images rotated 180° to create both white and black viewpoints
+- This doubles the dataset size
+
+Train/Test split strategy:
+- Training: Games 4, 5, 6, 7 (prevents data leakage)
+- Testing: Game 2
+
+================================================================================
+SCRIPTS CREATED
+================================================================================
+
+1. preprocess_real_images.py
+   - Collects real images from gameX_per_frame/tagged_images/
+   - Creates 180° rotated versions (black viewpoint)
+   - Output: dataset/real/
+
+2. preprocess_synthetic_images.py
+   - Collects synthetic images from synthetic_gameX/cropped/
+   - Deletes comparison.png files
+   - Creates 180° rotated versions
+   - Output: dataset/synthetic/
+
+3. organize_cut_dataset.py
+   - Organizes images into trainA/trainB/testA/testB structure
+   - Game-based split (train: 4,5,6,7 | test: 2)
+
+4. cluster_setup.sh
+   - One-time setup script for BGU cluster
+   - Clones CUT repository
+   - Installs PyTorch and dependencies
+
+5. train_cut.sh
+   - Training script with parameters:
+     --batch_size 4
+     --crop_size 256
+     --n_epochs 200
+     --n_epochs_decay 200
+     --save_epoch_freq 20
+
+6. resume_training.sh
+   - Detects last saved epoch from checkpoint files
+   - Resumes training with correct --epoch_count
+   - Use this after session disconnects
+
+7. test_cut.sh
+   - Runs inference on test set after training completes
+
+================================================================================
+BGU CLUSTER WORKFLOW
+================================================================================
+
+Connection steps:
+1. Connect to BGU VPN (if off-campus)
+2. ssh podgort@slurm.bgu.ac.il
+3. sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+4. ssh podgort@NODE-NAME.auth.ad.bgu.ac.il (node name shown after step 3)
+5. Use tmux to keep training running after disconnect
+
+Important cluster commands:
+- Request GPU: sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+- Check jobs: squeue -u $USER
+- Cancel job: scancel JOB_ID
+- Check GPU: nvidia-smi
+
+tmux commands:
+- Start: tmux new -s training
+- Detach: Ctrl+B, then D
+- Reattach: tmux attach -t training
+- Scroll: Ctrl+B, then [ (press q to exit scroll mode)
+
+GPU types on cluster:
+- GTX 1080 Ti (11GB) - use batch_size 4
+- GTX 1080 (8GB) - use batch_size 2
+
+================================================================================
+PROJECT FILES ON CLUSTER
+================================================================================
+
+Location: ~/chess_cut_project/
+
+Structure:
+    ~/chess_cut_project/
+    ├── cluster_setup.sh
+    ├── train_cut.sh
+    ├── resume_training.sh
+    ├── test_cut.sh
+    └── contrastive-unpaired-translation/
+        ├── datasets/
+        │   └── chess/
+        │       ├── trainA/
+        │       ├── trainB/
+        │       ├── testA/
+        │       └── testB/
+        ├── checkpoints/
+        │   └── chess_cut/
+        │       ├── latest_net_G.pth
+        │       ├── latest_net_F.pth
+        │       ├── latest_net_D.pth
+        │       ├── 20_net_G.pth
+        │       ├── 40_net_G.pth
+        │       └── web/images/ (sample images)
+        └── results/ (test results after inference)
+
+================================================================================
+TRAINING STATUS: COMPLETED (verified May 29, 2026)
+================================================================================
+
+Training finished all 400 epochs.
+- Started:  April 5, 2026 ~19:46
+- Finished: April 10, 2026 ~02:47
+- Final checkpoint = latest_*.pth = epoch 400 (identical files)
+- Checkpoints saved every 10 epochs (10, 20, ..., 400)
+- All checkpoints still on cluster at:
+    ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+Final losses (epoch 400, stable):
+- G_GAN: ~0.45
+- D_real: ~0.18
+- D_fake: ~0.13
+- NCE:    ~1.37
+- NCE_Y:  ~0.66
+
+Local copies pulled to (on the Mac):
+    ./trained_model/
+        latest_net_G.pth     (43 MB - generator, needed for inference)
+        latest_net_F.pth     (only needed to resume training)
+        latest_net_D.pth     (only needed to resume training)
+        train_opt.txt        (full hyperparameter dump)
+        test_opt.txt         (inference config)
+        loss_log.txt         (per-iter losses, ~1.5 MB)
+
+================================================================================
+TRAINING CONFIGURATION (from train_opt.txt - AUTHORITATIVE)
+================================================================================
+
+Model & architecture:
+- Framework:    CUT (Contrastive Unpaired Translation), CUT_mode = CUT
+- Generator:    resnet_9blocks, ngf=64, instance norm, no dropout, Xavier init (gain 0.02)
+- Discriminator: PatchGAN ('basic'), 3 layers, ndf=64, instance norm
+- NCE head F:   mlp_sample, 256-D, 256 patches per layer
+- NCE layers:   0, 4, 8, 12, 16 (5 feature layers from G's encoder)
+
+Loss:
+- GAN type:   LSGAN
+- lambda_GAN: 1.0
+- lambda_NCE: 1.0
+- nce_idt:    True  (also computes NCE on identity pass -> NCE_Y)
+- nce_T:      0.07
+
+Optimizer & schedule:
+- Adam (beta1=0.5, beta2=0.999), lr=2e-4
+- Schedule:   linear   (constant for n_epochs=200, then linear decay to 0 over n_epochs_decay=200)
+- Total:      400 epochs
+
+Data pipeline:
+- dataset_mode: unaligned
+- direction:    AtoB (synthetic -> real)
+- dataroot:     ./datasets/chess   (trainA=2664 synthetic, trainB=736 real)
+- preprocess:   resize_and_crop (load_size=286, crop_size=256)
+- Flipping enabled (no_flip=False)
+
+Run:
+- batch_size:     4
+- iters/epoch:    666 updates (2664 samples / batch 4)
+- save_epoch_freq: 10
+- gpu_ids:        0  (single GPU, GTX 1080 Ti 11 GB)
+
+Caveat: train_opt.txt was overwritten by the LAST resume (continue_train=True,
+epoch_count=301). It documents epochs 301-400. Earlier segments shared the same
+config (uninterrupted checkpoint timeline + stable losses), but technically only
+the final segment is proven from this file alone.
+
+================================================================================
+HOW TO RESUME TRAINING (AFTER SESSION EXPIRES)
+================================================================================
+
+1. Connect to cluster:
+   ssh podgort@slurm.bgu.ac.il
+
+2. Request new GPU:
+   sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+
+3. Connect to GPU node:
+   ssh podgort@NODE-NAME.auth.ad.bgu.ac.il
+
+4. Check GPU memory (nvidia-smi):
+   - If 11GB: use batch_size 4 (resume_training.sh)
+   - If 8GB: use batch_size 2 (manual command below)
+
+5. Install dependencies (required each new session):
+   pip install numpy dominate visdom packaging
+
+6. Resume training:
+   cd ~/chess_cut_project/contrastive-unpaired-translation
+   tmux new -s training
+   bash ~/chess_cut_project/resume_training.sh
+
+7. Detach from tmux: Ctrl+B, then D
+
+If 8GB GPU (batch_size 2):
+   python train.py \
+       --dataroot ./datasets/chess \
+       --name chess_cut \
+       --CUT_mode CUT \
+       --model cut \
+       --batch_size 2 \
+       --load_size 286 \
+       --crop_size 256 \
+       --n_epochs 200 \
+       --n_epochs_decay 200 \
+       --epoch_count CURRENT_EPOCH \
+       --gpu_ids 0 \
+       --display_id -1 \
+       --save_epoch_freq 20 \
+       --print_freq 100 \
+       --checkpoints_dir ./checkpoints \
+       --continue_train
+
+================================================================================
+WHAT TO DO WHEN TRAINING COMPLETES (EPOCH 400)
+================================================================================
+
+1. Run testing:
+   bash ~/chess_cut_project/test_cut.sh
+
+2. Download trained model to PC (from Windows terminal):
+   scp -r podgort@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\trained_model"
+
+3. Download test results:
+   scp -r podgort@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/results/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\test_results"
+
+4. Download training progress images:
+   scp -r podgort@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/web/images "C:\Users\talpo\Desktop\DL_Project_09032026\training_progress"
+
+5. Cancel GPU job:
+   squeue -u $USER
+   scancel JOB_ID
+
+================================================================================
+NEXT STEPS AFTER TRAINING (FROM PROJECT REQUIREMENTS)
+================================================================================
+
+1. Implement generate_chessboard_image(fen, viewpoint) function:
+   - Takes FEN string and viewpoint ('white' or 'black')
+   - Uses Blender to render synthetic image
+   - Passes through trained CUT model
+   - Returns realistic-looking chess image
+
+2. Evaluate model quality:
+   - Visual inspection of generated images
+   - Compare synthetic input vs generated output vs real images
+
+================================================================================
+COMMON ISSUES AND SOLUTIONS
+================================================================================
+
+1. "CUDA out of memory":
+   - Use batch_size 2 instead of 4
+
+2. "$'\r': command not found":
+   - Fix Windows line endings: sed -i 's/\r$//' filename.sh
+
+3. "Connection timed out":
+   - Reconnect to BGU VPN
+
+4. "No module named 'numpy'":
+   - Run: pip install numpy dominate visdom packaging
+
+5. "CondaError: Run 'conda init'":
+   - Ignore this error, training will still work with system Python
+
+6. Training shows "epoch 1" after resume:
+   - Old issue with resume script, now fixed
+   - Model weights are still loaded correctly
+
+================================================================================
+USEFUL COMMANDS
+================================================================================
+
+Check training progress (checkpoints):
+   ls -la ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+View loss log:
+   cat ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/loss_log.txt
+
+Download progress images to see visual results:
+   scp -r podgort@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/web/images "C:\Users\talpo\Desktop\DL_Project_09032026\training_progress"
+
+================================================================================
+END OF CONTEXT DOCUMENT
+================================================================================

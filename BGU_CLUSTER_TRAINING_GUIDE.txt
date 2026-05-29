@@ -1,0 +1,177 @@
+================================================================================
+BGU CLUSTER TRAINING GUIDE - CUT Model for Chess Synthetic-to-Real Translation
+================================================================================
+
+OVERVIEW
+--------
+This guide walks you through training the CUT model on the BGU GPU cluster.
+GPU: GTX 1080 Ti (11GB VRAM)
+Training time estimate: ~8-12 hours for 400 epochs
+
+================================================================================
+STEP 1: PREPARE FILES LOCALLY
+================================================================================
+
+Your dataset folder structure should be:
+    dataset/
+    ├── trainA/    (2,664 synthetic images - games 4,5,6,7)
+    ├── trainB/    (736 real images - games 4,5,6,7)
+    ├── testA/     (462 synthetic images - game 2)
+    └── testB/     (140 real images - game 2)
+
+Files to upload:
+    - dataset/ folder (the entire folder with trainA, trainB, testA, testB)
+    - cluster_setup.sh
+    - train_cut.sh
+    - test_cut.sh
+
+================================================================================
+STEP 2: CONNECT TO BGU CLUSTER
+================================================================================
+
+1. Connect to BGU VPN (if off-campus)
+   - Search "BGU VPN" and follow instructions
+
+2. Open terminal and connect to login node:
+   ssh YOUR_USERNAME@slurm.bgu.ac.il
+
+3. Request an interactive GPU session:
+   sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+
+4. Wait for GPU allocation. You'll see something like:
+   YOUR_USERNAME@ise-pheno-07.auth.ad.bgu.ac.il
+
+================================================================================
+STEP 3: UPLOAD FILES TO CLUSTER
+================================================================================
+
+Option A: Using SCP (recommended for large files)
+-------------------------------------------------
+From a NEW terminal on your LOCAL machine (not the cluster):
+
+# Create project directory on cluster first (in the cluster terminal):
+mkdir -p ~/chess_cut_project
+
+# Upload dataset (from your local terminal):
+scp -r "C:\Users\talpo\Desktop\DL_Project_09032026\dataset" YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/
+
+# Upload scripts:
+scp "C:\Users\talpo\Desktop\DL_Project_09032026\cluster_setup.sh" YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/
+scp "C:\Users\talpo\Desktop\DL_Project_09032026\train_cut.sh" YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/
+scp "C:\Users\talpo\Desktop\DL_Project_09032026\test_cut.sh" YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/
+
+Option B: Using VS Code Remote-SSH
+----------------------------------
+1. Install "Remote - SSH" extension in VS Code
+2. Press F1 -> "Remote-SSH: Connect to Host"
+3. Enter: YOUR_USERNAME@ise-pheno-07.auth.ad.bgu.ac.il
+4. Drag and drop files from local to remote
+
+================================================================================
+STEP 4: SETUP ENVIRONMENT ON CLUSTER
+================================================================================
+
+On the GPU node terminal:
+
+cd ~/chess_cut_project
+chmod +x cluster_setup.sh
+bash cluster_setup.sh
+
+This will:
+- Clone the CUT repository
+- Install PyTorch with CUDA support
+- Install dependencies
+- Verify GPU is working
+
+================================================================================
+STEP 5: ORGANIZE DATASET FOR CUT
+================================================================================
+
+# Move your dataset to the CUT datasets folder:
+mv ~/chess_cut_project/dataset ~/chess_cut_project/contrastive-unpaired-translation/datasets/chess
+
+# Verify structure:
+ls ~/chess_cut_project/contrastive-unpaired-translation/datasets/chess/
+# Should show: trainA  trainB  testA  testB
+
+================================================================================
+STEP 6: START TRAINING
+================================================================================
+
+cd ~/chess_cut_project/contrastive-unpaired-translation
+chmod +x ~/chess_cut_project/train_cut.sh
+bash ~/chess_cut_project/train_cut.sh
+
+Training will run for 400 epochs (200 + 200 decay).
+Checkpoints saved every 20 epochs to: checkpoints/chess_cut/
+
+To monitor training:
+- Loss values printed every 100 iterations
+- Check GPU usage: nvidia-smi
+
+================================================================================
+STEP 7: TESTING / INFERENCE
+================================================================================
+
+After training completes:
+
+bash ~/chess_cut_project/test_cut.sh
+
+Results saved to: results/chess_cut/test_latest/
+
+================================================================================
+STEP 8: DOWNLOAD RESULTS
+================================================================================
+
+From your LOCAL terminal:
+
+# Download trained model:
+scp -r YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\trained_model"
+
+# Download test results:
+scp -r YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/results/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\test_results"
+
+================================================================================
+STEP 9: CANCEL JOB WHEN DONE
+================================================================================
+
+IMPORTANT: Always release the GPU when done!
+
+# Find your job ID:
+squeue -u $USER
+
+# Cancel the job:
+scancel JOB_ID
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+1. "CUDA out of memory":
+   - Edit train_cut.sh and reduce batch_size from 4 to 2 or 1
+   - Or reduce crop_size from 256 to 128
+
+2. Training too slow:
+   - This is normal for CUT. 400 epochs takes ~8-12 hours.
+
+3. Connection dropped:
+   - Use tmux or screen to keep training running:
+     tmux new -s training
+     bash train_cut.sh
+     # Press Ctrl+B then D to detach
+     # Reconnect later with: tmux attach -t training
+
+4. Check training progress after reconnecting:
+   tail -f ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/loss_log.txt
+
+================================================================================
+QUICK REFERENCE
+================================================================================
+
+Login node:     ssh YOUR_USERNAME@slurm.bgu.ac.il
+Request GPU:    sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+Check GPU:      nvidia-smi
+Check jobs:     squeue -u $USER
+Cancel job:     scancel JOB_ID
+
+================================================================================

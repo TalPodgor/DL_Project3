@@ -1,0 +1,281 @@
+================================================================================
+COMPLETE CUT TRAINING GUIDE - BGU GPU CLUSTER
+Chess Synthetic-to-Real Image Translation
+================================================================================
+
+OVERVIEW
+--------
+Training time: ~8-12 hours (may require 2 sessions)
+GPU: GTX 1080 Ti
+Dataset: 4,002 images (synthetic + real)
+
+================================================================================
+PART A: FIRST SESSION - SETUP AND START TRAINING
+================================================================================
+
+STEP 1: Connect to BGU VPN (if you're off-campus)
+-------------------------------------------------
+If you're not on BGU WiFi, you must first connect to the VPN:
+- Search Google for "BGU VPN" and follow the university instructions
+- Without VPN, you won't be able to connect to the cluster
+
+
+STEP 2: Open a Terminal and Connect to the Login Node
+-----------------------------------------------------
+Open Command Prompt or PowerShell on your Windows PC and run:
+
+    ssh podgort@slurm.bgu.ac.il
+
+Replace YOUR_USERNAME with your BGU username. Enter your BGU password when prompted.
+
+
+STEP 3: Request a GPU
+---------------------
+Once logged in, run this command to request a GPU:
+
+    sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+
+Wait until you're assigned a GPU node. You'll see something like:
+
+    podgort@ise-pheno-07.auth.ad.bgu.ac.il
+
+Note the node name (e.g., ise-pheno-07) - you'll need it for VS Code.
+
+
+STEP 4: Create Project Folder on Cluster
+----------------------------------------
+On the cluster terminal (the GPU node), run:
+
+    mkdir -p ~/chess_cut_project
+
+
+STEP 5: Upload Files from Your PC to the Cluster
+------------------------------------------------
+Open a NEW terminal on your local Windows PC (keep the cluster terminal open).
+Run these commands one by one:
+
+Upload the dataset:
+
+    scp -r "C:\Users\talpo\Desktop\DL_Project_09032026\dataset" podgort@slurm.bgu.ac.il:~/chess_cut_project/
+
+Upload the scripts:
+
+    scp "C:\Users\talpo\Desktop\DL_Project_09032026\cluster_setup.sh" podgort@slurm.bgu.ac.il:~/chess_cut_project/
+
+    scp "C:\Users\talpo\Desktop\DL_Project_09032026\train_cut.sh" podgort@slurm.bgu.ac.il:~/chess_cut_project/
+
+    scp "C:\Users\talpo\Desktop\DL_Project_09032026\test_cut.sh" podgort@slurm.bgu.ac.il:~/chess_cut_project/
+
+    scp "C:\Users\talpo\Desktop\DL_Project_09032026\resume_training.sh" podgort@slurm.bgu.ac.il:~/chess_cut_project/
+
+This will take a few minutes for the dataset (~4000 images).
+
+
+STEP 6: Run Setup Script on the Cluster
+---------------------------------------
+Go back to your cluster terminal (the GPU node) and run:
+
+    cd ~/chess_cut_project
+    chmod +x cluster_setup.sh
+    bash cluster_setup.sh
+
+This clones CUT and installs PyTorch. Wait for it to complete.
+
+
+STEP 7: Move Dataset to CUT Folder
+----------------------------------
+    mv ~/chess_cut_project/dataset ~/chess_cut_project/contrastive-unpaired-translation/datasets/chess
+
+Verify it worked:
+
+    ls ~/chess_cut_project/contrastive-unpaired-translation/datasets/chess/
+
+You should see: trainA  trainB  testA  testB
+
+
+STEP 8: Start Training with tmux (IMPORTANT!)
+---------------------------------------------
+Use tmux to keep training running even if you disconnect:
+
+    cd ~/chess_cut_project/contrastive-unpaired-translation
+    chmod +x ~/chess_cut_project/train_cut.sh
+    chmod +x ~/chess_cut_project/resume_training.sh
+
+    tmux new -s training
+    bash ~/chess_cut_project/train_cut.sh
+
+Training will start. You'll see loss values printed every 100 iterations.
+
+tmux commands:
+- To detach (leave running in background): Press Ctrl+B, then D
+- To reconnect later: tmux attach -t training
+- To see if tmux session exists: tmux ls
+
+
+STEP 9: Monitor Progress (Optional)
+-----------------------------------
+Check what epoch you've reached:
+
+    ls -la ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+You'll see files like 20_net_G.pth, 40_net_G.pth showing completed epochs.
+
+Check GPU usage:
+
+    nvidia-smi
+
+
+STEP 10: When Session Ends / Release GPU
+----------------------------------------
+Before your 8-hour session ends, your checkpoints are automatically saved.
+
+To manually release the GPU when you're done or taking a break:
+
+    squeue -u $USER
+
+Find your JOBID, then:
+
+    scancel JOBID
+
+
+================================================================================
+PART B: RESUMING TRAINING (IF SESSION EXPIRED BEFORE COMPLETION)
+================================================================================
+
+Your checkpoints are safe! They persist on the cluster storage between sessions.
+
+STEP 1: Request a New GPU Session
+---------------------------------
+    ssh YOUR_USERNAME@slurm.bgu.ac.il
+    sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+
+
+STEP 2: Resume Training
+-----------------------
+    cd ~/chess_cut_project/contrastive-unpaired-translation
+
+    tmux new -s training
+    bash ~/chess_cut_project/resume_training.sh
+
+Training will automatically continue from the last saved checkpoint.
+
+To detach: Press Ctrl+B, then D
+To reconnect: tmux attach -t training
+
+
+STEP 3: Check Progress
+----------------------
+    ls -la ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+Look for the highest numbered checkpoint (e.g., 180_net_G.pth means epoch 180 completed).
+
+
+================================================================================
+PART C: AFTER TRAINING COMPLETES (400 EPOCHS)
+================================================================================
+
+STEP 1: Run Testing / Inference
+-------------------------------
+    cd ~/chess_cut_project/contrastive-unpaired-translation
+    bash ~/chess_cut_project/test_cut.sh
+
+Results saved to: ./results/chess_cut/test_latest/
+
+
+STEP 2: Download Results to Your PC
+-----------------------------------
+From your LOCAL Windows terminal:
+
+Download trained model:
+
+    scp -r YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\trained_model"
+
+Download test results:
+
+    scp -r YOUR_USERNAME@slurm.bgu.ac.il:~/chess_cut_project/contrastive-unpaired-translation/results/chess_cut "C:\Users\talpo\Desktop\DL_Project_09032026\test_results"
+
+
+STEP 3: Release the GPU (VERY IMPORTANT!)
+-----------------------------------------
+    squeue -u $USER
+    scancel JOBID
+
+
+================================================================================
+EXPECTED TIMELINE
+================================================================================
+
+    Session 1 (8 hours)  -->  ~150-200 epochs completed
+    Session 2 (8 hours)  -->  ~300-400 epochs completed (DONE!)
+
+You'll likely need 2 sessions to complete the full 400 epochs.
+
+
+================================================================================
+HOW CHECKPOINTS WORK
+================================================================================
+
+Checkpoints are saved to:
+    ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+Files saved:
+    - latest_net_G.pth    (generator - updated frequently)
+    - latest_net_F.pth    (feature network)
+    - latest_net_D.pth    (discriminator)
+    - 20_net_G.pth        (checkpoint at epoch 20)
+    - 40_net_G.pth        (checkpoint at epoch 40)
+    - ...and so on every 20 epochs
+
+Even if your session gets killed unexpectedly:
+    - Checkpoints remain on the cluster storage
+    - They persist between sessions
+    - Just request a new GPU and run resume_training.sh
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+1. "CUDA out of memory":
+   - Edit train_cut.sh and reduce batch_size from 4 to 2 or 1
+
+2. "tmux session not found":
+   - Your session may have been killed. Just run: tmux new -s training
+
+3. "Connection refused" when using scp:
+   - Make sure you're connected to BGU VPN
+
+4. Check if training is still running:
+   - tmux ls (shows active sessions)
+   - tmux attach -t training (reconnect to see output)
+
+5. See recent training output without attaching:
+   - tail -f ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/loss_log.txt
+
+
+================================================================================
+QUICK REFERENCE COMMANDS
+================================================================================
+
+Login to cluster:        ssh YOUR_USERNAME@slurm.bgu.ac.il
+Request GPU:             sinteractive --qos course --part gtx1080 --gpu 1 --time 0-08:00:00
+Check GPU:               nvidia-smi
+Check your jobs:         squeue -u $USER
+Cancel job:              scancel JOBID
+Start tmux:              tmux new -s training
+Detach tmux:             Ctrl+B, then D
+Reconnect tmux:          tmux attach -t training
+Check checkpoints:       ls -la ~/chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_cut/
+
+
+================================================================================
+FILES YOU NEED TO UPLOAD (from C:\Users\talpo\Desktop\DL_Project_09032026\)
+================================================================================
+
+1. dataset/              (folder with trainA, trainB, testA, testB)
+2. cluster_setup.sh      (one-time setup script)
+3. train_cut.sh          (training script)
+4. test_cut.sh           (testing script)
+5. resume_training.sh    (resume from checkpoint script)
+
+================================================================================
