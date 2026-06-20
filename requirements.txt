@@ -1,3 +1,11 @@
+# --- Project 3 inference + report (generate_chessboard_image / run_project3_demo) ---
+# Synthetic render also needs Blender (installed separately) + chess-set.blend.
+Pillow>=9.0.0
+torch>=1.12          # realistic-translation generator (final model)
+torchvision>=0.13
+reportlab>=3.6       # regenerate the final report PDF (v5_work/make_final_report_pdf.py)
+
+# --- existing environment (pip freeze) ---
 attrs==25.3.0
 autopep8==2.3.1
 cattrs==25.1.1

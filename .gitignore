@@ -1,5 +1,6 @@
 # Datasets (course rule: shared drive)
 dataset/
+datasets/
 real/
 synthetic/
 game*_per_frame/
@@ -7,12 +8,37 @@ synthetic_game*/
 test_output/
 test_output.zip
 training_progress/
+training_progress.zip
 
 # Local CUT repo (cloned at setup, see README)
 contrastive-unpaired-translation/
 
-# Inference outputs
+# Inference outputs (runtime; committed samples live in submission/sample_outputs/)
 results/
+
+# Final / large checkpoints (download from Drive — see submission/CHECKPOINT_MANIFEST.md)
+checkpoints/
+
+# Heavy experiment / render / eval artifacts (not part of the submission)
+cluster_results/
+qa_visual/
+gemini_diagnostics/
+tmp/
+logs/
+models/
+cyclegan_try1/
+
+# v5_work: keep source code + final_config + make_final_report_pdf.py,
+# drop the gigabytes of ablation/eval/audit image dumps and local checkpoints.
+v5_work/eval_*/
+v5_work/*audit*/
+v5_work/double_head_*/
+v5_work/checkpoints/
+v5_work/smoke/
+v5_pipeline/smoke/
+
+# Blender backups
+*.blend1
 
 # OS / tooling
 .DS_Store
