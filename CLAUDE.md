@@ -1,7 +1,8 @@
 # CLAUDE.md — agent onboarding guide
 
 Read this first. It orients a new agent (or human) to this repository quickly and
-flags the traps that will otherwise waste your time.
+flags the traps that will otherwise waste your time. For the *timeline / why we made
+each change* (the project's story), see [HISTORY.md](HISTORY.md).
 
 ## TL;DR
 
