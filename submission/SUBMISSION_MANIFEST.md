@@ -14,7 +14,6 @@ Project 3 submission.
 | README (reproduction) | [`README.md`](../README.md) |
 | `requirements.txt` | [`requirements.txt`](../requirements.txt) |
 | Final report (PDF, 6 pp) | [`output/pdf/project3_final_report.pdf`](../output/pdf/project3_final_report.pdf) |
-| Presentation deck (9 slides) | [`submission/project3_presentation.pptx`](project3_presentation.pptx) |
 | Final model source | [`v5_work/v5_cluster_src/`](../v5_work/v5_cluster_src/) (`paired_geom_hd_model.py`, `v5_oblique_dataset.py`) |
 | Final config | [`v5_work/final_config/bright_silABC_train_opt.txt`](../v5_work/final_config/bright_silABC_train_opt.txt) |
 | Synthetic render pipeline | [`v5_pipeline/`](../v5_pipeline/) + [`chess-set.blend`](../chess-set.blend) |
