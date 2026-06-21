@@ -1,0 +1,16 @@
+{
+  "tag": "pcomp_shape_train10",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.983005923394837,
+  "transparent_head_flag_rate": 0.006211180124223602,
+  "edge_halo_delta_mean": -3.6621864678696814,
+  "edge_halo_flag_rate": 0.15062111801242237,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.8023807077489284,
+  "merge_delta_mean": 9.438517649621422,
+  "trans_ratio_w": 0.9288429532652659,
+  "detail_ratio_w": 0.7325750074939066,
+  "trans_ratio_b": 1.037438696613472,
+  "detail_ratio_b": 0.8725341325382219
+}

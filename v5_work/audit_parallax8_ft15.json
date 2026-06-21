@@ -1,0 +1,16 @@
+{
+  "tag": "parallax8_ft15",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 1.014703723793107,
+  "transparent_head_flag_rate": 0.005279503105590062,
+  "edge_halo_delta_mean": -2.0542816458281523,
+  "edge_halo_flag_rate": 0.27267080745341615,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.8707493533999283,
+  "merge_delta_mean": 8.348723424053608,
+  "trans_ratio_w": 0.9508226328116095,
+  "detail_ratio_w": 0.7993304594668018,
+  "trans_ratio_b": 1.0789030269339146,
+  "detail_ratio_b": 0.9425240077013394
+}

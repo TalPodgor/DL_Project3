@@ -1,0 +1,16 @@
+{
+  "tag": "shape_clip_r16",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.994425543190324,
+  "transparent_head_flag_rate": 0.0055900621118012426,
+  "edge_halo_delta_mean": -15.073634292472223,
+  "edge_halo_flag_rate": 0.0,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.9197115133823075,
+  "merge_delta_mean": 24.87705252784829,
+  "trans_ratio_w": 0.9357991277716978,
+  "detail_ratio_w": 0.8246455943717389,
+  "trans_ratio_b": 1.0533439955475234,
+  "detail_ratio_b": 1.0152509861612973
+}

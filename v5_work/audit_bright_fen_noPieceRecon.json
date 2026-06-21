@@ -1,0 +1,16 @@
+{
+  "tag": "bright_fen_noPieceRecon",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 1.0966758676595862,
+  "transparent_head_flag_rate": 0.0018633540372670807,
+  "edge_halo_delta_mean": 0.44296494892665317,
+  "edge_halo_flag_rate": 0.47422360248447204,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 1.0415729039944477,
+  "merge_delta_mean": 7.185359244089807,
+  "trans_ratio_w": 1.0463285576203714,
+  "detail_ratio_w": 0.9946000287597803,
+  "trans_ratio_b": 1.1472739737637536,
+  "detail_ratio_b": 1.088779766154319
+}

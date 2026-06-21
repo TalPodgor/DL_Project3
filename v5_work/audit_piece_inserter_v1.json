@@ -1,0 +1,16 @@
+{
+  "tag": "piece_inserter_v1",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.8988021120887257,
+  "transparent_head_flag_rate": 0.046583850931677016,
+  "edge_halo_delta_mean": -9.710049169404167,
+  "edge_halo_flag_rate": 0.0018633540372670807,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.5477926141403107,
+  "merge_delta_mean": 44.90604123277956,
+  "trans_ratio_w": 0.8463113319273636,
+  "detail_ratio_w": 0.4601025013841661,
+  "trans_ratio_b": 0.951554365625736,
+  "detail_ratio_b": 0.6359195394132977
+}

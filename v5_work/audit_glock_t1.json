@@ -1,0 +1,16 @@
+{
+  "tag": "glock_t1",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.4289560943692213,
+  "transparent_head_flag_rate": 0.9173913043478261,
+  "edge_halo_delta_mean": -2.527565048348089,
+  "edge_halo_flag_rate": 0.24161490683229814,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.4564737783085485,
+  "merge_delta_mean": 9.003719143818907,
+  "trans_ratio_w": 0.4169797942957899,
+  "detail_ratio_w": 0.438201670309868,
+  "trans_ratio_b": 0.4409920522263311,
+  "detail_ratio_b": 0.4748369055251553
+}

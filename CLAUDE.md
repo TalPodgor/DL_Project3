@@ -125,6 +125,26 @@ top-level `*.md` research notes. They are research history, not the submission.
 - **The synthetic image is real; the realistic image is never faked.** If torch/the
   checkpoint are missing, the function raises — keep that behavior.
 
+## Training code & research notes (for the full picture)
+
+- **Custom training modules** live in `v5_work/v5_cluster_src/` (and a v4 copy in
+  `v4_pipeline/cluster_src/`): `paired_geom_hd_model.py` (the final model + the two
+  discriminators wiring), `paired_hd_model.py` (defines `MultiscaleDiscriminator`,
+  the local `NLayerDiscriminatorFeat` piece-crop discriminator, and `VGGPerceptualLoss`),
+  `v5_oblique_dataset.py`, `square_eval.py`, plus the `train_/test_/score_*.sbatch`.
+  To actually train: `git clone` the CUT framework (taesungp/contrastive-unpaired-translation)
+  and drop these into its `models/` and `data/` dirs — `networks.py` and `base_model.py`
+  come from that framework (not vendored here). Inference does NOT need any of this.
+- **Discriminators:** (1) a global multi-scale PatchGAN (`MultiscaleDiscriminator`,
+  num_D=2 scales), (2) a local class-conditional piece-crop discriminator
+  (`NLayerDiscriminatorFeat`, 96px crops + one-hot piece label). A frozen ResNet-18
+  square classifier (`square_eval.pth`) adds a loss but is NOT a discriminator.
+- **The journey / why:** the dated notes in the repo root tell the full story —
+  `REFACTOR_LOG.md` (CUT→paired pivot), `HANDOFF.md`, `V5_ROOT_CAUSE_AND_DECISION.md`,
+  `V5_PROBE_RESULTS_AND_DECISION.md`, `PROJECT_CONCLUSION_CEILING.md`, plus the
+  per-experiment `v5_work/audit_*.json` (the raw ablation numbers) and
+  `v5_work/*.py` (the eval/ablation scripts). See also [HISTORY.md](HISTORY.md).
+
 ## Submission docs (authoritative detail)
 
 - `submission/SUBMISSION_MANIFEST.md` — deliverable paths + PASS/FAIL checklist + remaining steps.

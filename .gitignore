@@ -36,6 +36,29 @@ v5_work/double_head_*/
 v5_work/checkpoints/
 v5_work/smoke/
 v5_pipeline/smoke/
+# v5_work: keep .py/.md/.json (notes, scripts, ablation results); drop heavy renders/logs.
+v5_work/*.png
+v5_work/*.log
+v5_work/*.pid
+v5_work/results_*/
+v5_work/calib/
+v5_work/mask_bank*/
+v5_work/mask_trim*/
+v5_work/parallax_probe*/
+v5_work/blind_eval_round2/
+v5_work/sam_probe_out/
+v5_work/reports_noC/
+
+# Pipeline caches / renders (keep code, drop generated images)
+**/cache/
+v3_pipeline/calib/
+v3_pipeline/renders/
+v3_pipeline/assets/
+
+# Root diagnostic images / downloaded data
+gemini_diagnostic_*.png
+chessboard_comparison_examples.png
+data from drive/
 
 # Blender backups
 *.blend1

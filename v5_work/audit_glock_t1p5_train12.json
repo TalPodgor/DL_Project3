@@ -1,0 +1,16 @@
+{
+  "tag": "glock_t1p5_train12",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.49629770625858133,
+  "transparent_head_flag_rate": 0.7919254658385093,
+  "edge_halo_delta_mean": 0.0017119659400134353,
+  "edge_halo_flag_rate": 0.44254658385093165,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.4903119610888617,
+  "merge_delta_mean": 9.665478296849058,
+  "trans_ratio_w": 0.4375042065338105,
+  "detail_ratio_w": 0.4396600002028242,
+  "trans_ratio_b": 0.5553840752223299,
+  "detail_ratio_b": 0.5412162356032233
+}

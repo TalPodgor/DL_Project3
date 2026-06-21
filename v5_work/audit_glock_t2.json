@@ -1,0 +1,16 @@
+{
+  "tag": "glock_t2",
+  "n_pieces": 3220,
+  "transparent_head_ratio_mean": 0.7096340053983303,
+  "transparent_head_flag_rate": 0.4046583850931677,
+  "edge_halo_delta_mean": -2.1274804189338448,
+  "edge_halo_flag_rate": 0.2754658385093168,
+  "ghost_echo_mean": 0.0,
+  "ghost_echo_flag_rate": 0.0,
+  "detail_ratio_mean": 0.8958730215611665,
+  "merge_delta_mean": 8.415792853898184,
+  "trans_ratio_w": 0.7093665270746202,
+  "detail_ratio_w": 0.8683520212049378,
+  "trans_ratio_b": 0.709902816117177,
+  "detail_ratio_b": 0.9235311128282606
+}
