@@ -15,6 +15,8 @@ Project 3 submission.
 | `requirements.txt` | [`requirements.txt`](../requirements.txt) |
 | Final report (PDF, 6 pp) | [`output/pdf/project3_final_report.pdf`](../output/pdf/project3_final_report.pdf) |
 | Presentation deck (9 slides) | [`submission/project3_presentation.pptx`](project3_presentation.pptx) |
+| Dataset labels (full / test) | [`submission/gt.csv`](gt.csv) (876 rows) · [`submission/gt_test.csv`](gt_test.csv) (140 rows) — `image_name, FEN, view` |
+| Google Drive folder | `DL_Project3` → https://drive.google.com/drive/folders/1e8AgZ6X9Qj-q5V50yrsSriba33IDJQFR (dataset_root + gt_test.csv + README; images added via Drive UI) |
 | Final model source | [`v5_work/v5_cluster_src/`](../v5_work/v5_cluster_src/) (`paired_geom_hd_model.py`, `v5_oblique_dataset.py`) |
 | Final config | [`v5_work/final_config/bright_silABC_train_opt.txt`](../v5_work/final_config/bright_silABC_train_opt.txt) |
 | Synthetic render pipeline | [`v5_pipeline/`](../v5_pipeline/) + [`chess-set.blend`](../chess-set.blend) |
@@ -86,6 +88,9 @@ sample renders in `sample_outputs/` are genuine.
 3. **End-to-end realistic test** — on a torch GPU env with the checkpoint placed,
    run `python run_project3_demo.py` and confirm all three `./results/*.png`.
 4. **Push** — `git push origin main` (see below).
-5. **Drive dataset format** — ensure the uploaded chess dataset includes a
-   `gt.csv` (`image_name, FEN, view`) per the guidelines' Chess dataset format.
+5. **Drive dataset images** — the `DL_Project3` Drive folder now has the
+   dataset_root structure, `gt_test.csv`, and a README. Add the ~500 MB image
+   files (`datasets/chess_v5_oblique_aligned_bright/{train,test}/`) into
+   `images/` via the Drive web UI (the per-file API can't push binaries), and
+   optionally upload the full `gt.csv` there too.
 6. **Deadline** — the PDF lists Jan 24 2026 (already past); confirm resubmission/extension.
