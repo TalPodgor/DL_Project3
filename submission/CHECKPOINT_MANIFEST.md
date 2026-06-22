@@ -47,9 +47,10 @@ python run_project3_demo.py            # produces all three ./results/*.png
 
 ## Legacy weights (NOT the final model)
 
-`trained_model/latest_net_{G,F,D}.pth` (committed, ~58 MB total) are the earlier
-**CUT (unpaired)** baseline. They are kept for history only and are **not** used
-by `generate_chessboard_image`. The `net_F` (NCE head) is the tell-tale of CUT.
+The earlier **CUT (unpaired)** baseline weights (`trained_model/latest_net_{G,F,D}.pth`,
+~56 MB) were a different, abandoned model and have been **removed** to avoid shipping
+dead weights. Only the CUT `train_opt.txt` / `test_opt.txt` / `loss_log.txt` remain
+as history. `generate_chessboard_image` never used them.
 
 ## Note for maintainers
 

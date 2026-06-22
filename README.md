@@ -142,7 +142,7 @@ v5_work/
 output/pdf/project3_final_report.pdf   final report (6 pp)
 submission/                      guidelines summary, manifests, sample outputs
 checkpoints/chess_v5_bright_silABC/    place latest_net_G.pth here (from Drive)
-trained_model/                   LEGACY CUT baseline (history only — not used)
+trained_model/                   CUT train config + loss log (dead weights removed)
 requirements.txt
 ```
 
@@ -179,7 +179,7 @@ Do not retrain to use the model — only the checkpoint is needed for inference.
 ## Project history (earlier approach)
 
 The first iteration used **CUT** (Contrastive Unpaired Translation, Park et al.
-ECCV 2020); those weights remain in `trained_model/` for history only. The final
+ECCV 2020); its weights have been removed (only the CUT train config + loss log remain in `trained_model/`). The final
 system replaced it with the paired, geometry-conditioned `paired_geom_hd`
 described above. Older notes: `PROJECT_CONTEXT_FOR_CLAUDE.txt`,
 `BGU_CLUSTER_TRAINING_GUIDE.txt`.

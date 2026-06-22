@@ -32,9 +32,9 @@ that's expected. Switch: `git checkout project3-final-submission`.
 The project's first iteration used **CUT** (unpaired translation). It was abandoned.
 Two leftovers will try to mislead you:
 
-- `trained_model/latest_net_{G,F,D}.pth` — these are the **legacy CUT weights**,
-  NOT the final model. The tell is `latest_net_F.pth` (an NCE projection head that
-  only CUT has). `generate_chessboard_image` does **not** use these.
+- `trained_model/` — held the **legacy CUT weights** (a different, abandoned model).
+  Those `.pth` files were **removed**; only the CUT `train_opt.txt` / `loss_log.txt`
+  remain as history. `generate_chessboard_image` never used them.
 - `main`'s README describes the project as "CUT". Ignore it; use this branch's README.
 
 The **final** model is `chess_v5_bright_silABC` = `paired_geom_hd`:
@@ -102,7 +102,7 @@ v5_work/make_final_report_pdf.py ← regenerates the report PDF
 output/pdf/project3_final_report.pdf  ← final report (6 pp)
 submission/                      ← manifests + guidelines summary + samples + the .pptx deck
 checkpoints/chess_v5_bright_silABC/   ← place latest_net_G.pth here (from Drive; git-ignored)
-trained_model/                   ← LEGACY CUT weights (history only — do NOT use)
+trained_model/                   ← CUT train config + loss log (dead weights removed)
 ```
 
 **Noise to ignore** (old experiments / large dumps, mostly git-ignored): `v3_pipeline/`,
