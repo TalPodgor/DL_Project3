@@ -49,11 +49,11 @@ The **final** model is `chess_v5_bright_silABC` = `paired_geom_hd`:
 
 The machine that prepared this submission has **Blender + Pillow + numpy**, but:
 
-- ❌ **No PyTorch** installed → the realistic (GAN) stage cannot run here.
-- ❌ **The final checkpoint is NOT in the repo** — it is ~43 MB and lives on the
-  shared Google Drive. Expected local path:
-  `checkpoints/chess_v5_bright_silABC/latest_net_G.pth` (see
-  `submission/CHECKPOINT_MANIFEST.md`).
+- ❌ **No PyTorch** on the machine that prepared this → the realistic (GAN) stage
+  couldn't be executed here (the code path is complete; run it on any torch env).
+- ✅ **The final checkpoint IS in the repo** (force-added, ~44 MB) at
+  `checkpoints/chess_v5_bright_silABC/latest_net_G.pth` — no download needed.
+  (Verified: it has a 21-ch input conv → the real geometry-conditioned model, not CUT.)
 - ✅ **Blender is installed** → the synthetic stage runs and is verified.
 
 So locally: `synthetic.png` renders for real; the realistic stage raises a clean,
@@ -154,8 +154,8 @@ top-level `*.md` research notes. They are research history, not the submission.
 
 ## Open TODOs (as of 2026-06-20)
 
-1. Add the real Drive/Release **download link** for the checkpoint (placeholder in
-   `generate_chessboard_image.py::CHECKPOINT_URL` and the checkpoint manifest).
+1. ~~Checkpoint download link~~ — **DONE**: `latest_net_G.pth` is bundled in the
+   repo (force-added at `checkpoints/chess_v5_bright_silABC/`).
 2. **Run the realistic stage end-to-end** on a torch GPU env with the checkpoint, and
    confirm all three `./results/*.png` (and that `load_state_dict` succeeds).
 3. Verify the slide-1 degree program ("B.Sc. Computer Science") and visually proof the deck.

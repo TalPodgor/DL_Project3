@@ -63,8 +63,8 @@ sample renders in `sample_outputs/` are genuine.
 |---|---|---|
 | `generate_chessboard_image(fen, viewpoint) -> None` exists | ✅ PASS | `generate_chessboard_image.py` |
 | Saves `./results/synthetic.png` | ✅ PASS | verified (512×512 RGB) |
-| Saves `./results/realistic.png` | ⏳ NEEDS CKPT | code path complete; needs torch + checkpoint |
-| Saves `./results/side_by_side.png` (synth\|real) | ⏳ NEEDS CKPT | produced once realistic runs |
+| Saves `./results/realistic.png` | ✅ READY | checkpoint bundled in repo; needs a torch env to execute |
+| Saves `./results/side_by_side.png` (synth\|real) | ✅ READY | produced when realistic runs |
 | Creates `./results/` if missing | ✅ PASS | `_results_dir()` |
 | `viewpoint` ∈ {white, black}, both work | ✅ PASS | both rendered (see sample_outputs) |
 | Deterministic for same (fen, viewpoint) | ✅ PASS | fixed render params; `eval()`, no dropout/randomness |
@@ -82,9 +82,8 @@ sample renders in `sample_outputs/` are genuine.
 
 1. ~~Student names~~ — **DONE** (Tal Podgor, Ilay Vanunu, Ran Packler) in the
    report PDF and README.
-2. **Checkpoint link** — add the real download URL in
-   `CHECKPOINT_MANIFEST.md` and `generate_chessboard_image.py::CHECKPOINT_URL`,
-   and confirm `latest_net_G.pth` is on the shared drive.
+2. ~~Checkpoint~~ — **DONE**: `latest_net_G.pth` is force-added to the repo at
+   `checkpoints/chess_v5_bright_silABC/latest_net_G.pth` (no download needed).
 3. **End-to-end realistic test** — on a torch GPU env with the checkpoint placed,
    run `python run_project3_demo.py` and confirm all three `./results/*.png`.
 4. **Push** — `git push origin main` (see below).

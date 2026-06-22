@@ -37,7 +37,7 @@ BLEND_FILE = PROJECT_ROOT / "chess-set.blend"
 
 MODEL_NAME = "chess_v5_bright_silABC"
 CHECKPOINT_PATH = PROJECT_ROOT / "checkpoints" / MODEL_NAME / "latest_net_G.pth"
-CHECKPOINT_URL = "<ADD DRIVE/RELEASE LINK — see submission/CHECKPOINT_MANIFEST.md>"
+CHECKPOINT_URL = "bundled in repo at checkpoints/chess_v5_bright_silABC/latest_net_G.pth (see submission/CHECKPOINT_MANIFEST.md)"
 
 # Canonical "bright" oblique render parameters (from the training dataset
 # labels.json for chess_v5_oblique_aligned_bright; elevation 44 deg).

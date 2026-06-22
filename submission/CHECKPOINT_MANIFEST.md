@@ -1,8 +1,8 @@
 # Checkpoint manifest — final model `chess_v5_bright_silABC`
 
-The final realistic-translation model is too large for Git and was trained on the
-BGU cluster. Its weights live on the shared drive and must be placed locally to
-run the realistic stage of `generate_chessboard_image`.
+The final realistic-translation model was trained on the BGU cluster. Its
+generator weights are **bundled in this repo** (force-added at the path below), so
+`generate_chessboard_image` runs without any download.
 
 ## Required file
 
@@ -12,8 +12,8 @@ run the realistic stage of `generate_chessboard_image`.
 | Model type | `paired_geom_hd` (paired, geometry-conditioned, pix2pixHD-style) |
 | Generator file | `latest_net_G.pth` |
 | Expected path | `checkpoints/chess_v5_bright_silABC/latest_net_G.pth` |
-| Approx. size | ~43 MB |
-| Download link | **TODO: add Drive/Release link** (placeholder in `generate_chessboard_image.py::CHECKPOINT_URL`) |
+| Approx. size | ~44 MB (45,796,425 bytes) |
+| Location | **Bundled in the repo** (force-added; `checkpoints/` is otherwise gitignored). Cluster source: `chess_cut_project/contrastive-unpaired-translation/checkpoints/chess_v5_bright_silABC/`. |
 
 Only the **generator** (`*_net_G.pth`) is needed for inference. The discriminator
 (`*_net_D.pth`) and any auxiliary classifier (`square_eval.pth`) are training-only.
@@ -36,16 +36,14 @@ exact architecture so the `state_dict` loads without the full framework.
 
 Full training config: `v5_work/final_config/bright_silABC_train_opt.txt`.
 
-## How to install the checkpoint
+## How to run with the checkpoint
+
+The checkpoint is already in the repo — no download needed:
 
 ```bash
-mkdir -p checkpoints/chess_v5_bright_silABC
-# download latest_net_G.pth from the Drive link above into that folder:
-#   checkpoints/chess_v5_bright_silABC/latest_net_G.pth
-python run_project3_demo.py            # now produces all three ./results/*.png
+pip install torch torchvision          # or use the cluster `pytorch` env
+python run_project3_demo.py            # produces all three ./results/*.png
 ```
-
-Requires PyTorch (`pip install torch torchvision`) or the cluster `pytorch` env.
 
 ## Legacy weights (NOT the final model)
 

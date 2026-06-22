@@ -69,13 +69,10 @@ Also required:
 1. **Blender** (https://www.blender.org/download/) — for the synthetic render.
    Put `blender` on your `PATH` or set the `BLENDER` env var. (`chess-set.blend`
    ships in the repo.)
-2. **Final checkpoint** — download `latest_net_G.pth` from the shared drive and
-   place it at:
-   ```
-   checkpoints/chess_v5_bright_silABC/latest_net_G.pth
-   ```
-   See [`submission/CHECKPOINT_MANIFEST.md`](submission/CHECKPOINT_MANIFEST.md)
-   (model, size, link, and exact architecture/load contract).
+2. **Final checkpoint** — already **bundled in the repo** at
+   `checkpoints/chess_v5_bright_silABC/latest_net_G.pth` (~44 MB). No download
+   needed. See [`submission/CHECKPOINT_MANIFEST.md`](submission/CHECKPOINT_MANIFEST.md)
+   for the architecture/load contract.
 
 The realistic stage runs on CPU or GPU; a GPU makes it near-instant.
 
